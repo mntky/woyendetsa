@@ -7,9 +7,8 @@ import (
 	//"github.com/lxc/lxd/shared/api"
 )
 
-func Describe(args1, args2 string) (string, error){
+func Describe(args1 string) (string, error){
 	fmt.Println(args1)
-	fmt.Println(args2)
 
 	resp := "ok"
 	var err error
