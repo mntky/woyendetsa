@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mntky/woyendetsa/action"
+	"github.com/mntky/woyendetsa/master/w8a/action"
 	"github.com/urfave/cli"
 )
 

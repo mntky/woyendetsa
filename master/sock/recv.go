@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"net"
 	"bufio"
+	"encoding/json"
+	"bytes"
 )
 
 
-var raddr = "192.168.11.100"
-var rport = ":8989"
+var raddr = "10.25.10.113"
+var rport = ":8990"
 
 func main() {
 	ln, err := net.Listen("tcp", raddr+rport)
@@ -21,7 +23,15 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		var buf bytes.Buffer
 		status, err := bufio.NewReader(conn).ReadString('\n')
-		fmt.Println(status)
+		fmt.Printf("%T\n", status)
+		err = json.Indent(&buf, []byte(status), "","  ")
+		if err != nil {
+			panic(err)
+		}
+		indentJson := buf.String()
+		fmt.Println(indentJson)
+		conn.Close()
 	}
 }
