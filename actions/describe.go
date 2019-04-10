@@ -8,10 +8,10 @@ import (
 )
 
 func Describe(args1 string) (string, error){
-	fmt.Println(args1)
-
 	resp := "ok"
 	var err error
+
+	fmt.Println(args1)
 
 	return resp, err
 }

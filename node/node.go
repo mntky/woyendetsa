@@ -5,51 +5,47 @@ import (
 	"net"
 	"bufio"
 
+	"github.com/mntky/lxd-controller/pkg"
 	"github.com/lxc/lxd/shared/api"
 )
 
-func main() {
-	raddr := "1.1.1.1"
-	rport := ":8989"
-	saddr := "2.2.2.2"
-	sport := "8989"
+var raddr = "10.25.10.101"
+var rport = ":8989"
+var saddr = "10.25.10.132"
+var sport = "8989"
 
+func main() {
 	ln, err := net.Listen("tcp", raddr+rport)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			fmt.Println(err)
 		}
-		status, err := bufio,NewReader(conn).ReadString('/n')
+		status, err := bufio.NewReader(conn).ReadString('\n')
 		go handlerecv(status)
 	}
+}
 
 func handlerecv(status string) {
 	switch status {
 		case "get":
-			//-------------------
-			container, err := lxd.ConnectLXDUnix("", nil)
-			if err !=  nil {
-				fmt.Println(err)
-			}
-			//------------------
-			stat, str, err := container.GetContainerState(ubuko)
-			if err != nil {
-				fmt.Println(str)
-				fmt.Println(err)
-			}
-			send(*stat)
+			lxdconn := lxdpkg.Connect()
+			containerstat := lxdpkg.Status("ubuko", lxdconn)
+			send(&containerstat)
 		default:
 			fmt.Println("test")
 	}
-	return nil
+	return
 }
 
-func send(stat) {
+func send(stat **api.ContainerState) {
 	conn, err := net.Dial("tcp", saddr+sport)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Fprintf(conn, stat)
+	fmt.Fprintf(conn, *stat)
 }
