@@ -30,12 +30,21 @@ func main() {
 	}
 }
 
-func handlerecv(status string) {
+func handlerecv(status, containername string) {
+	lxdconn := lxdpkg.Connect()
 	switch status {
-		case "get":
-			lxdconn := lxdpkg.Connect()
-			containerstat := lxdpkg.Status("ubuko", lxdconn)
-			send(&containerstat)
+		case "status":
+			statresp := lxdpkg.Status(containername, lxdconn)
+			send(&statresp)
+		case: "create":
+			createresp := lxdpkg.Create(containername, lxdconn)
+			send(&createresp)
+		case: "delete":
+			deleteresp := lxdpkg.Delete(containername, lxdconn)
+			send(&deleteresp)
+		case: "start":
+			startresp := lxdpkg.Start(containername, lxdconn)
+			send(&startresp)
 		default:
 			fmt.Println("test")
 	}
