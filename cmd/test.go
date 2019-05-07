@@ -1,42 +1,32 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"log"
+	"os"
+	"encoding/json"
 
-	"github.com/mntky/woyendetsa/action"
+	"github.com/mntky/woyendetsa/actions"
 	"github.com/urfave/cli"
 )
 
-var saddr = XXXX
-var sport = 8080
+var saddr = "10.20.30.40"
+var sport = ":8080"
 
 type Act struct {
-	Action	string
-	Option	string
-	Conta	string
+	Action string
+	Option string
+	Conta  string
 }
 
 func NewAct(action, option, conta string) *Act {
-	w8aAct := &StructA{
-		Action:	action,
-		Option:	option,
-		Conta:	conta,
+	w8aAct := &Act{
+		Action: action,
+		Option: option,
+		Conta:  conta,
 	}
 	return w8aAct
-
-func send(args) (string, error) {
-	ln, err  net.dial("tcp", saddr+sport)
-	if err != nil {
-		return "", err
-	}
-	fmt.Fprintf(ln, args)
-	ln.Close()
-
-	return "ok", nil
 }
-
 
 func main() {
 	app := cli.NewApp()
@@ -45,10 +35,13 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		if os.Args[1] != "" {
 			act := NewAct(os.Args[1], os.Args[2], os.Args[3])
-			send(act)
+			//change struct -> json
+			j, _ := json.Marshal(act)
+			str, err := action.Send(j)
 			if err != nil {
 				return err
 			}
+			fmt.Println(str)
 		}
 		fmt.Println("show w8a help `w8a --help` ")
 		var err error
