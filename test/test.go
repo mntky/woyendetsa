@@ -10,8 +10,8 @@ import (
 	"github.com/urfave/cli"
 )
 
-var saddr = "10.20.30.40"
-var sport = ":8080"
+//var saddr = "10.71.173.160"
+//var sport = ":8080"
 
 type Act struct {
 	Action string

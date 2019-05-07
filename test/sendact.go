@@ -5,7 +5,7 @@ import (
 	"net"
 )
 
-var saddr = "10.20.30.40" //test
+var saddr = "10.71.173.160" //test
 var sport = ":8080"
 
 func Send(args []byte) (string, error) {

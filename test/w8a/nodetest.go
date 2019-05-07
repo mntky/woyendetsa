@@ -5,13 +5,11 @@ import (
 	"net"
 	"bufio"
 
-	"github.com/mntky/lxd-controller/pkg"
-	"github.com/lxc/lxd/shared/api"
 )
 
-var raddr = "10.71.173.160"
+var raddr = "10.71.173.139"
 var rport = ":8080"
-var saddr = "10.71.173.139"
+var saddr = "10.71.173.160"
 var sport = "8080"
 
 func main() {
@@ -26,27 +24,24 @@ func main() {
 			fmt.Println(err)
 		}
 		status, err := bufio.NewReader(conn).ReadString('\n')
-		go handlerecv(status)
+		fmt.Println(status)
+		//go handlerecv(status, )
 	}
 }
-
+/*
 func handlerecv(status, containername string) {
-	lxdconn := lxdpkg.Connect()
+	fmt.Println(containername)
 	switch status {
 		case "status":
-			statresp := lxdpkg.Status(containername, lxdconn)
-			send(&statresp)
-		case: "create":
-			createresp := lxdpkg.Create(containername, lxdconn)
-			send(&createresp)
-		case: "delete":
-			deleteresp := lxdpkg.Delete(containername, lxdconn)
-			send(&deleteresp)
-		case: "start":
-			startresp := lxdpkg.Start(containername, lxdconn)
-			send(&startresp)
+			fmt.Println("status")
+		case "create":
+			fmt.Println("create")
+		case "delete":
+			fmt.Println("delete")
+		case "start":
+			fmt.Println("start")
 		default:
-			fmt.Println("test")
+			fmt.Println("other")
 	}
 	return
 }
@@ -58,3 +53,4 @@ func send(stat **api.ContainerState) {
 	}
 	fmt.Fprintf(conn, *stat)
 }
+*/
