@@ -6,8 +6,8 @@ import (
 )
 
 //master -> node
-var daddr = "1.2.3.4"
-var dport = ":8008"
+var daddr = "192.168.11.100"
+var dport = ":8080"
 
 func Send(args []byte) (string, error) {
 	fmt.Printf("send :&s", args)

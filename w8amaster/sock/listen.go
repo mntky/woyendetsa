@@ -1,4 +1,4 @@
-package sock
+package main
 
 import (
 	"bufio"
@@ -9,27 +9,27 @@ import (
 )
 
 //node -> master
-var laddr = "1.1.1.1"
-var lport = ":8080"
+var laddr = "192.168.11.100"
+var lport = ":8090"
 
-func Listen() (string, error) {
+func main() {
 	ln, err := net.Listen("tcp", laddr+lport)
 	if err != nil {
-		return "", err
+		fmt.Println(err)
 	}
 
 	for {
 		conn, err := ln.Accept()
 		defer conn.Close()
 		if err != nil {
-			return "", err
+			fmt.Println(err)
 		}
 
 		var buf bytes.Buffer
 		status, err := bufio.NewReader(conn).ReadString('\n')
 		err = json.Indent(&buf, []byte(status), "", " ")
 		if err != nil {
-			return "", err
+			fmt.Println(err)
 		}
 		indentJson := buf.String()
 		fmt.Println(indentJson)

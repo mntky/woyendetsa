@@ -7,7 +7,8 @@ import (
 	"os"
 
 	"github.com/urfave/cli"
-	"github.com/mntky/woyendetsa/master"
+	"github.com/mntky/woyendetsa/w8amaster/send"
+	//"./send"
 )
 
 type Act struct {

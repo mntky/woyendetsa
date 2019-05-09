@@ -7,12 +7,18 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/mntky/lxd-controller/pkg"
+	//"github.com/mntky/lxd-controller/pkg"
 )
 
 //master -> node 
-var laddr = "1.1.1.1"
+var laddr = "192.168.11.100"
 var lport = ":8080"
+
+type Act struct {
+        Action string
+        Option string
+        Conta  string
+}
 
 func main() {
 	ln, err := net.Listen("tcp", laddr+lport)
@@ -27,35 +33,39 @@ func main() {
 			fmt.Println(err)
 		}
 
-		var buf bytes.Buffer
-		status, err := bufio.NewReader(conn).ReadString('\n')
-		err = json.Indent(&buf, []byte(status), "", " ")
-		if err != nil {
-			fmt.Println(err)
-		}
-		indentJson := buf.String()
-		fmt.Println(indentJson)
-		go handleact(indentJson)
+		go handleact(conn)
 	}
 }
 
-func handleact(indentJson string) {
+func handleact(data net.Conn) {
+	var buf bytes.Buffer
+	status, err := bufio.NewReader(data).ReadString('\n')
+	err = json.Indent(&buf, []byte(status), "", " ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	indentJson := buf.String()
+	fmt.Printf("%T", indentJson)
+	fmt.Println(indentJson)
+
+/*
 	lxdconn := lxdpkg.Connect()
-	switch indentJson {
+	switch indentJson.Action {
 		case "status":
-			statresp := lxdpkg.Status(containername, lxdconn)
+			statresp := lxdpkg.Status(indentJson.Conta, lxdconn)
 			sock.Send(&statresp)
 		case "create":
-			createresp := lxdpkg.Create(containername, lxdconn)
+			createresp := lxdpkg.Create(indentJson.Conta, lxdconn)
 			sock.Send(&createresp)
 		case "delete":
-			deleteresp := lxdpkg.Delete(containername, lxdconn)
+			deleteresp := lxdpkg.Delete(indentJson.Conta, lxdconn)
 			sock.Send(&deleteresp)
 		case "start":
-			startresp := lxdpkg.Start(containername, lxdconn)
+			startresp := lxdpkg.Start(indentJson.Conta, lxdconn)
 			sock.Send(&startresp)
 		default:
 			fmt.Println("nothing command")
 	}
 	return
+*/
 }
