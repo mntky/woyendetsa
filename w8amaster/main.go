@@ -35,6 +35,8 @@ func main() {
 			act := NewAct(os.Args[1], os.Args[2], os.Args[3])
 			//change struct -> json
 			j, _ := json.Marshal(act)
+			//
+			fmt.Println(j)
 			str, err := sock.Send(j)
 			if err != nil {
 				return err
