@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"bytes"
+	//"bytes"
 	"encoding/json"
 	"fmt"
 	"net"
@@ -38,8 +38,26 @@ func main() {
 }
 
 func handleact(data net.Conn) {
-	var buf bytes.Buffer
+	act := new(Act)
+
+	fmt.Printf("--data--\n type: %T \n data: %v \n" ,data,data)
+
 	status, err := bufio.NewReader(data).ReadString('\n')
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("--status-- \n type: %T \n data: %v \n ---json data---\n ",status,status)
+
+	jsonByte :=([]byte)(status)
+	if err := json.Unmarshal(jsonByte, act); err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("action: %v \n",act.Action)
+	fmt.Printf("options: %v \n",act.Option)
+	fmt.Printf("container: %v \n",act.Conta)
+
+
+/*
 	err = json.Indent(&buf, []byte(status), "", " ")
 	if err != nil {
 		fmt.Println(err)
@@ -48,7 +66,7 @@ func handleact(data net.Conn) {
 	fmt.Printf("%T", indentJson)
 	fmt.Println(indentJson)
 
-/*
+
 	lxdconn := lxdpkg.Connect()
 	switch indentJson.Action {
 		case "status":
