@@ -8,7 +8,6 @@ import (
 
 	"github.com/urfave/cli"
 	"github.com/mntky/woyendetsa/w8amaster/send"
-	//"./send"
 )
 
 type Act struct {
@@ -35,15 +34,17 @@ func main() {
 			act := NewAct(os.Args[1], os.Args[2], os.Args[3])
 			//change struct -> json
 			j, _ := json.Marshal(act)
-			//
-			fmt.Println(j)
+			//fmt.Println(j)
 			str, err := sock.Send(j)
 			if err != nil {
 				return err
 			}
 			fmt.Println(str)
+		}else {
+			fmt.Println("show w8a help `w8a --help` ")
+			var err error
+			return err
 		}
-		fmt.Println("show w8a help `w8a --help` ")
 		var err error
 		return err
 	}

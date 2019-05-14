@@ -1,16 +1,16 @@
 package sock
 
 import (
-	"fmt"
+	//"fmt"
 	"net"
+
 )
 
 //node -> master
-var daddr = "1.2.3.4"
-var dport = ":8008"
+var daddr = "192.168.11.100"
+var dport = ":8090"
 
-func Send(args []byte) (string, error) {
-	fmt.Printf("send :&s", args)
+func Send(args string) (string, error) {
 	ln, err := net.Dial("tcp", daddr+dport)
 	defer ln.Close()
 	if err != nil {
@@ -18,6 +18,5 @@ func Send(args []byte) (string, error) {
 	}
 
 	ln.Write([]byte(args))
-
 	return "ok", nil
 }
