@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
-	"encoding/json"
+//	"bufio"
+//	"bytes"
+//	"encoding/json"
 	"fmt"
 	"net"
 )
@@ -24,7 +24,9 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Println(conn)
 
+/*
 		var buf bytes.Buffer
 		status, err := bufio.NewReader(conn).ReadString('\n')
 		err = json.Indent(&buf, []byte(status), "", " ")
@@ -33,5 +35,6 @@ func main() {
 		}
 		indentJson := buf.String()
 		fmt.Println(indentJson)
+*/
 	}
 }
