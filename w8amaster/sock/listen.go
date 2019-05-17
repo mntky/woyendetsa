@@ -1,7 +1,7 @@
 package main
 
 import (
-//	"bufio"
+	"bufio"
 //	"bytes"
 //	"encoding/json"
 	"fmt"
@@ -24,17 +24,13 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(conn)
 
-/*
-		var buf bytes.Buffer
 		status, err := bufio.NewReader(conn).ReadString('\n')
-		err = json.Indent(&buf, []byte(status), "", " ")
 		if err != nil {
 			fmt.Println(err)
 		}
-		indentJson := buf.String()
-		fmt.Println(indentJson)
-*/
+		fmt.Println("--sock/listen--")
+		fmt.Println(status)
+
 	}
 }

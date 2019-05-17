@@ -50,6 +50,7 @@ func main() {
 	}
 	err := app.Run(os.Args)
 	if err != nil {
+		fmt.Println("test")
 		log.Fatal(err)
 	}
 }
