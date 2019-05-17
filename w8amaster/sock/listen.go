@@ -1,7 +1,7 @@
 package main
 
 import (
-//	"bufio"
+	"bufio"
 //	"bytes"
 //	"encoding/json"
 	"fmt"
@@ -24,7 +24,7 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		resp, err := bufio.NewReader(data).ReadString('\n')
+		resp, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
 		}
