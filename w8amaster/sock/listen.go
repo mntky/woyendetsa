@@ -24,7 +24,11 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(conn)
+		resp, err := bufio.NewReader(data).ReadString('\n')
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(resp)
 
 /*
 		var buf bytes.Buffer

@@ -10,7 +10,7 @@ var daddr = "192.168.11.100"
 var dport = ":8080"
 
 func Send(args []byte) (string, error) {
-	fmt.Printf("type: %T \n data: %v", args, args)
+	//fmt.Printf("type: %T \n data: %v", args, args)
 	ln, err := net.Dial("tcp", daddr+dport)
 	defer ln.Close()
 	if err != nil {
@@ -19,5 +19,5 @@ func Send(args []byte) (string, error) {
 
 	ln.Write([]byte(args))
 
-	return "ok", nil
+	return "", nil
 }
