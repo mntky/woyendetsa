@@ -3,10 +3,14 @@ package main
 import (
 	"bufio"
 //	"bytes"
-//	"encoding/json"
+	"encoding/json"
 	"fmt"
 	"net"
 )
+
+type JsonResp struct {
+	Status string
+}
 
 //node -> master
 var laddr = "192.168.11.100"
@@ -29,6 +33,14 @@ func main() {
 			fmt.Println(err)
 		}
 		fmt.Println(resp)
+
+		jresp := new(JsonResp)
+		jsonByte := ([]byte)(resp)
+		if err := json.Unmarshal(jsonByte, jresp); err != nil {
+			fmt.Println(err)
+		}
+
+		fmt.Printf("Status: %v\n", jresp.Status)
 
 /*
 		var buf bytes.Buffer
