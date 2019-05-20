@@ -19,5 +19,5 @@ func Send(args []byte) (string, error) {
 
 	ln.Write([]byte(args))
 
-	return "ok", nil
+	return "", nil
 }

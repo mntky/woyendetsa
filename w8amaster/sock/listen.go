@@ -6,6 +6,7 @@ import (
 //	"encoding/json"
 	"fmt"
 	"net"
+	"bufio"
 )
 
 //node -> master
@@ -26,6 +27,11 @@ func main() {
 		}
 		fmt.Println(conn)
 
+		status, err := bufio.NewReader(conn).ReadString('\n')
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(string(status))
 /*
 		var buf bytes.Buffer
 		status, err := bufio.NewReader(conn).ReadString('\n')

@@ -60,6 +60,8 @@ func handleact(data net.Conn) {
 	fmt.Printf("options: %v \n",act.Option)
 	fmt.Printf("container: %v \n",act.Conta)
 
+	fmt.Println("---lxd connect---")
+
 	lxdconn := lxdpkg.Connect()
 	switch act.Action {
 		case "status":
