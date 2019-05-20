@@ -1,0 +1,34 @@
+w8a *act* *dst*
+
+act: status
+    dst: --container--
+        arg: container-name //return "container-name" status
+        arg: none           //return "all-container" status
+
+        --return args--
+        Status:     string  //run, stop
+        Network:    string  //ipaddress
+        CpuUsage:   int
+        DiskUsage:  int
+
+    dst: --node--
+        arg: node-name  //return "node-name" status
+        arg: none       //return all "node-name" status
+
+        --return args--
+        Status:     string  //run, stop
+        Network:    string  //conn master to node address
+        Cont:       map[]   //all container on node
+
+act: start
+    arg: container-name //return err
+
+act: delete
+    arg: container-name //return err
+
+act: create
+    arg: container-name //return err
+
+act: conn   //connect node to master
+    dst: ipaddress:port
+        arg: key
