@@ -13,14 +13,14 @@ import (
 type Act struct {
 	Action string
 	Option string
-	Conta  string
+	Args  string
 }
 
 func NewAct(action, option, conta string) *Act {
 	w8aAct := &Act{
 		Action: action,
 		Option: option,
-		Conta:  conta,
+		Args:  conta,
 	}
 	return w8aAct
 }
