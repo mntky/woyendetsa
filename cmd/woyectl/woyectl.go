@@ -1,14 +1,19 @@
 package main
 
 import (
-	"w8s/cmd/lxc-manager/"
-	"fmt"
+	"os"
 
-	"github.com/spf13/cobra"
+	"github.com/sirupsen/logrus"
+	"w8a/pkg/woyectl/cmd"
+	"w8a/pkg/woyectl/cmd/crad"
 )
 
 func main() {
+	var log = logrus.New()
 
-	cmd := app.NewLXCManager()
-	cmd.Execute()
+	command := cmd.NewWoyectl()
+	if err :=command.Execute(); err != nil {
+		log.Println(err)
+		os.Exit(1)
+	}
 }
