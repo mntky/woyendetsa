@@ -4,8 +4,7 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-	"w8a/pkg/woyectl/cmd"
-	"w8a/pkg/woyectl/cmd/crad"
+	"w8a/cmd/woyectl/cmd"
 )
 
 func main() {
