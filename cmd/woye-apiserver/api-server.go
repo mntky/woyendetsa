@@ -19,12 +19,13 @@ import (
 	"os"
 	"fmt"
 
-	"w8a/cmd/woye-apiserver/cmd"
+	"w8a/cmd/woye-apiserver/app"
 )
 
 func main() {
-	command := cmd.NewWoyeapiserver()
+	command := app.NewWoyeapiserver()
   if err := command.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	}
 }
