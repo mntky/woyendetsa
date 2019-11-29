@@ -17,6 +17,7 @@ package app
 
 import (
   "fmt"
+	"net/http"
 
   "github.com/spf13/cobra"
   "github.com/spf13/viper"
@@ -30,8 +31,7 @@ func NewWoyeapiserver() *cobra.Command {
 		Short: "woye-api-server is LXC cluster frontend",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			url := viper.GetString("url")
-			fmt.Printf("listen on %s \n",url)
-			return Run(url)
+			return Run(url, NewChannel())
 		},
 	}
 
@@ -57,4 +57,12 @@ func initConfig() {
 	if err != nil {
 		panic(fmt.Errorf("%s",err))
 	}
+}
+
+func Run(url string, stopCh <-chan struct{}) error {
+	fmt.Printf("listen on %s", url)
+	go func() {
+		startServer(url)
+	}()
+
 }
