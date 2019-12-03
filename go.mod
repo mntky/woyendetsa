@@ -14,7 +14,7 @@ require (
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.3.2
-	go.etcd.io/etcd v3.3.18+incompatible // indirect
+	go.etcd.io/etcd v3.3.18+incompatible
 	go.uber.org/zap v1.13.0 // indirect
 	golang.org/x/net v0.0.0-20191126235420-ef20fe5d7933 // indirect
 	google.golang.org/grpc v1.25.1 // indirect

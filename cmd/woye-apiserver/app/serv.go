@@ -40,6 +40,15 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(rdata)
 
+	cli, err := NewEtcdClient()
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = Putkvs(cli, rdata.Name, body)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 
 	w.Write([]byte("OK"))
 }
