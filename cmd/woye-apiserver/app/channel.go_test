@@ -3,7 +3,7 @@ package app
 import (
 )
 
-func NewChannel() <-chan {
+func NewChannel() <-chan int {
 	ch := make(chan struct{})
 	return ch
 }

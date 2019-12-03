@@ -17,7 +17,6 @@ package app
 
 import (
   "fmt"
-	"net/http"
 
   "github.com/spf13/cobra"
   "github.com/spf13/viper"
@@ -30,14 +29,15 @@ func NewWoyeapiserver() *cobra.Command {
 		Use:   "woye-api-server",
 		Short: "woye-api-server is LXC cluster frontend",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			url := viper.GetString("url")
-			return Run(url, NewChannel())
+			url := viper.GetString("listen")
+			//return Run(url, NewChannel())
+			return Run(url)
 		},
 	}
 
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringP("url", "", "", "api server listen address")
-	viper.BindPFlag("url", rootCmd.PersistentFlags().Lookup("url"))
+	rootCmd.PersistentFlags().StringP("listen", "", "", "api server listen address")
+	viper.BindPFlag("url", rootCmd.PersistentFlags().Lookup("listen"))
 
 	return rootCmd
 }
@@ -50,6 +50,7 @@ func initConfig() {
     viper.SetConfigFile(cfgFile)
   }
 	//setconfignameはちゃんと拡張子つけて
+	viper.SetConfigType("yaml")
 	viper.SetConfigName("config")
 	viper.AddConfigPath("$HOME/.w8a/")
 	viper.AutomaticEnv()
@@ -59,10 +60,15 @@ func initConfig() {
 	}
 }
 
-func Run(url string, stopCh <-chan struct{}) error {
+func Run(url string) error {
 	fmt.Printf("listen on %s", url)
-	go func() {
-		startServer(url)
-	}()
-
+	startServer(url)
+	return nil
 }
+
+//func Run(url string, stopCh <-chan struct{}) error {
+//	fmt.Printf("listen on %s", url)
+//	go func() {
+//		startServer(url)
+//	}()
+//}
