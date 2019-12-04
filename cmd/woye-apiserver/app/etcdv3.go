@@ -6,36 +6,85 @@ import (
 	"time"
 	"context"
 
-	"go.etcd.io/etcd/clientv3"
+	"github.com/coreos/etcd/clientv3"
 )
 
-func NewEtcdClient() (*clientv3.Client, error) {
-	cli, err := clientv3.New(clientv3.Config{
-		Endpoints:	[]string{"http://localhost:2379"},
-		DialTimeout: 5 * time.Second,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return cli, nil
+type EtcdElement struct {
+	Cli			*clientv3.Client
+	Kv			clientv3.KV
+	Ctx			context.Context
+	Cancel	context.CancelFunc
 }
 
-func Putkvs(cli *clientv3.Client, containername, reqvalue string) error {
-	defer cli.Close()
+var (
+	endpoints = []string{"localhost:2379", "localhost:22379", "localhost:32379"}
+	timeout = 3 * time.Second
+)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	resp, err := cli.Put(ctx, containername, reqvalue)
-	cancel()
+func newEtcdClient() (EtcdElement, error) {
+	var etcd = EtcdElement{}
+	cli, err := clientv3.New(clientv3.Config{
+		Endpoints:		endpoints,
+		DialTimeout:	timeout,
+	})
+	if err != nil {
+		return etcd, err
+	}
+	kv := clientv3.NewKV(cli)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	//fmt.Printf("%T\n",ctx)
+	//fmt.Printf("%T\n",cancel)
+
+	etcd = EtcdElement{
+		Cli:	cli,
+		Kv:		kv,
+		Ctx:	ctx,
+		Cancel:	cancel,
+	}
+	return etcd, nil
+}
+
+
+func PutContainerSpec(containername, reqvalue string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(resp)
-
-	resp2, err := cli.Get(ctx, containername)
+	etcd, err := newEtcdClient()
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%q\n",resp2.Kvs)
-	fmt.Printf("%T\n", cancel)
+	defer etcd.Cli.Close()
+
+	putresp, err := etcd.Kv.Put(etcd.Ctx, "/container/"+containername+"/spec", reqvalue)
+	etcd.Cancel()
+	if err != nil {
+		return err
+	}
+	fmt.Println(putresp)
+
+	return nil
+}
+
+//delete container spec
+func deleteAllKeys(containername) error {
+	etcd, err := newEtcdClient()
+	if err != nil {
+		return err
+	}
+	defer etcd.Cli.Close()
+
+	etcd.Kv.Delete(etcd.Ctx, "", clientv3.WithPrefix())
+	return nil
+}
+
+//delete all keys in etcd
+func deleteAllKeys() error {
+	etcd, err := newEtcdClient()
+	if err != nil {
+		return err
+	}
+	defer etcd.Cli.Close()
+
+	etcd.Kv.Delete(etcd.Ctx, "", clientv3.WithPrefix())
 	return nil
 }

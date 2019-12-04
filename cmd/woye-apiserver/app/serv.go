@@ -24,6 +24,8 @@ func startServer(url string) {
 	http.ListenAndServe(url, nil)
 }
 
+//woctl create command.
+//register containername:spec to etcd
 func lxc_create(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("method %s \n",r.Method)
 
@@ -40,11 +42,7 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(rdata)
 
-	cli, err := NewEtcdClient()
-	if err != nil {
-		fmt.Println(err)
-	}
-	err = Putkvs(cli, rdata.Name, body)
+	err = PutContainerSpec(rdata.Name, body)
 	if err != nil {
 		fmt.Println(err)
 	}
