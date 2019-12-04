@@ -24,34 +24,48 @@ func startServer(url string) {
 	http.ListenAndServe(url, nil)
 }
 
+var (
+	resptxt = []byte("ok")
+	rdata createdata
+)
+
 //woctl create command.
 //register containername:spec to etcd
 func lxc_create(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("method %s \n",r.Method)
-
-	fmt.Println("--serv bufbody---")
 	bufbody := new(bytes.Buffer)
 	bufbody.ReadFrom(r.Body)
-	body := bufbody.String()
-	fmt.Println(body)
 
-	var rdata createdata
+	//送られてきたjsonのspecを構造体にはめる
 	err := json.Unmarshal(bufbody.Bytes(), &rdata)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(rdata)
-
-	err = PutContainerSpec(rdata.Name, body)
+	//rdata.Nameはコンテナ名、bodyは送られてきたjson
+	err = PutContainerSpec(rdata.Name, bufbody.String() )
 	if err != nil {
 		fmt.Println(err)
 	}
 
-
-	w.Write([]byte("OK"))
+	w.Write(resptxt)
 }
 
+
+//get container spec
 func lxc_read(w http.ResponseWriter, r *http.Request) {
+	bufbody := new(bytes.Buffer)
+	bufbody.ReadFrom(r.Body)
+
+	err := json.Unmarshal(bufbody.Bytes(), &rdata)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = ReadContainerSpec(rdata.Name)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	w.Write(resptxt)
 }
 
 func lxc_update(w http.ResponseWriter, r *http.Request) {

@@ -46,34 +46,48 @@ func newEtcdClient() (EtcdElement, error) {
 
 
 func PutContainerSpec(containername, reqvalue string) error {
-	if err != nil {
-		return err
-	}
 	etcd, err := newEtcdClient()
 	if err != nil {
 		return err
 	}
 	defer etcd.Cli.Close()
-
 	putresp, err := etcd.Kv.Put(etcd.Ctx, "/container/"+containername+"/spec", reqvalue)
 	etcd.Cancel()
 	if err != nil {
 		return err
 	}
-	fmt.Println(putresp)
 
+	fmt.Println(putresp.Header.Revision)
 	return nil
 }
 
+
+//get container spec
+func ReadContainerSpec(containername string){
+	etcd, err := newEtcdClient()
+	if err != nil {
+		return err
+	}
+	defer etcd.Cli.Close()
+	getresp, err := etcd.Kv.Get(etcd.Ctx, "/container/"+containername+"/spec")
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(getresp.Header.Revision)
+	return nil
+}
+
+
 //delete container spec
-func deleteAllKeys(containername) error {
+func DeleteContainerSpec(containername string) error {
 	etcd, err := newEtcdClient()
 	if err != nil {
 		return err
 	}
 	defer etcd.Cli.Close()
 
-	etcd.Kv.Delete(etcd.Ctx, "", clientv3.WithPrefix())
+	etcd.Kv.Delete(etcd.Ctx, "/container/"+containername+"/spec", clientv3.WithPrefix())
 	return nil
 }
 
