@@ -20,7 +20,7 @@ type deletedata struct {
 
 func startServer(url string) {
 	http.HandleFunc("/api/lxc/create", lxc_create)
-	http.HandleFunc("/api/lxc/read", lxc_read)
+	http.HandleFunc("/api/lxc/get", lxc_get)
 	http.HandleFunc("/api/lxc/update", lxc_update)
 	http.HandleFunc("/api/lxc/delete", lxc_delete)
 
@@ -55,7 +55,7 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 
 
 //get container spec
-func lxc_read(w http.ResponseWriter, r *http.Request) {
+func lxc_get(w http.ResponseWriter, r *http.Request) {
 	bufbody := new(bytes.Buffer)
 	bufbody.ReadFrom(r.Body)
 
@@ -64,12 +64,12 @@ func lxc_read(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	err = ReadContainerSpec(ddata.Name)
+	resp, err := ReferContainerSpec(ddata.Name)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	w.Write(resptxt)
+	w.Write([]byte(resp))
 }
 
 func lxc_update(w http.ResponseWriter, r *http.Request) {

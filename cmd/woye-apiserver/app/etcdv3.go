@@ -63,19 +63,19 @@ func PutContainerSpec(containername, reqvalue string) error {
 
 
 //get container spec
-func ReadContainerSpec(containername string) error{
+func ReferContainerSpec(containername string) (string, error) {
 	etcd, err := newEtcdClient()
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer etcd.Cli.Close()
 	getresp, err := etcd.Kv.Get(etcd.Ctx, "/container/"+containername+"/spec")
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	fmt.Println(getresp.Header.Revision)
-	return nil
+	fmt.Println(string(getresp.Kvs[0].Value))
+	return string(getresp.Kvs[0].Value), nil
 }
 
 
