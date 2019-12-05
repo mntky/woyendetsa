@@ -14,6 +14,9 @@ type createdata struct {
 	Replica int
 	Test		string
 }
+type deletedata struct {
+	Name	string
+}
 
 func startServer(url string) {
 	http.HandleFunc("/api/lxc/create", lxc_create)
@@ -26,7 +29,8 @@ func startServer(url string) {
 
 var (
 	resptxt = []byte("ok")
-	rdata createdata
+	cdata createdata
+	ddata deletedata
 )
 
 //woctl create command.
@@ -36,12 +40,12 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 	bufbody.ReadFrom(r.Body)
 
 	//送られてきたjsonのspecを構造体にはめる
-	err := json.Unmarshal(bufbody.Bytes(), &rdata)
+	err := json.Unmarshal(bufbody.Bytes(), &cdata)
 	if err != nil {
 		fmt.Println(err)
 	}
-	//rdata.Nameはコンテナ名、bodyは送られてきたjson
-	err = PutContainerSpec(rdata.Name, bufbody.String() )
+	//cdata.Nameはコンテナ名、bodyは送られてきたjson
+	err = PutContainerSpec(cdata.Name, bufbody.String() )
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -55,12 +59,12 @@ func lxc_read(w http.ResponseWriter, r *http.Request) {
 	bufbody := new(bytes.Buffer)
 	bufbody.ReadFrom(r.Body)
 
-	err := json.Unmarshal(bufbody.Bytes(), &rdata)
+	err := json.Unmarshal(bufbody.Bytes(), &ddata)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	err = ReadContainerSpec(rdata.Name)
+	err = ReadContainerSpec(ddata.Name)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -72,4 +76,17 @@ func lxc_update(w http.ResponseWriter, r *http.Request) {
 }
 
 func lxc_delete(w http.ResponseWriter, r *http.Request) {
+	bufbody := new(bytes.Buffer)
+	bufbody.ReadFrom(r.Body)
+
+	err := json.Unmarshal(bufbody.Bytes(), &ddata)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = DeleteContainerSpec(ddata.Name)
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.Write(resptxt)
 }

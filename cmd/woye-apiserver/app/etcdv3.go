@@ -63,7 +63,7 @@ func PutContainerSpec(containername, reqvalue string) error {
 
 
 //get container spec
-func ReadContainerSpec(containername string){
+func ReadContainerSpec(containername string) error{
 	etcd, err := newEtcdClient()
 	if err != nil {
 		return err
