@@ -24,7 +24,8 @@ func startServer(url string) {
 	http.HandleFunc("/api/lxc/update", lxc_update)
 	http.HandleFunc("/api/lxc/delete", lxc_delete)
 
-	http.ListenAndServe(url, nil)
+	err := http.ListenAndServe(url, nil)
+	fmt.Println(err)
 }
 
 var (
@@ -39,11 +40,14 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 	bufbody := new(bytes.Buffer)
 	bufbody.ReadFrom(r.Body)
 
+	fmt.Println("--create--")
 	//送られてきたjsonのspecを構造体にはめる
 	err := json.Unmarshal(bufbody.Bytes(), &cdata)
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println("--etcd put--")
 	//cdata.Nameはコンテナ名、bodyは送られてきたjson
 	err = PutContainerSpec(cdata.Name, bufbody.String() )
 	if err != nil {
@@ -73,6 +77,7 @@ func lxc_get(w http.ResponseWriter, r *http.Request) {
 }
 
 func lxc_update(w http.ResponseWriter, r *http.Request) {
+	lxc_create(w, r)
 }
 
 func lxc_delete(w http.ResponseWriter, r *http.Request) {
