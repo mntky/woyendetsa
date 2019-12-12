@@ -4,6 +4,7 @@ import (
 	//"os"
 	"fmt"
 	"time"
+	"encoding/json"
 	"context"
 
 	"github.com/coreos/etcd/clientv3"
@@ -45,13 +46,19 @@ func newEtcdClient() (EtcdElement, error) {
 }
 
 
-func PutContainerSpec(specname, spec string) error {
+func PutContainerSpec(specname string, spec Specmeta) error {
 	etcd, err := newEtcdClient()
 	if err != nil {
 		return err
 	}
 	defer etcd.Cli.Close()
-	putresp, err := etcd.Kv.Put(etcd.Ctx, "/spec/"+specname, spec)
+
+	specjson, err := json.Marshal(spec.Container)
+	if err != nil {
+		return err
+	}
+
+	putresp, err := etcd.Kv.Put(etcd.Ctx, "/spec/"+specname, string(specjson))
 	etcd.Cancel()
 	if err != nil {
 		return err
@@ -69,7 +76,7 @@ func ReferContainerSpec(containername string) (string, error) {
 		return "", err
 	}
 	defer etcd.Cli.Close()
-	getresp, err := etcd.Kv.Get(etcd.Ctx, "/container/"+containername+"/spec")
+	getresp, err := etcd.Kv.Get(etcd.Ctx, "/spec/"+containername)
 	if err != nil {
 		return "", err
 	}
@@ -80,14 +87,14 @@ func ReferContainerSpec(containername string) (string, error) {
 
 
 //delete container spec
-func DeleteContainerSpec(containername string) error {
+func DeleteContainerSpec(specname string) error {
 	etcd, err := newEtcdClient()
 	if err != nil {
 		return err
 	}
 	defer etcd.Cli.Close()
 
-	etcd.Kv.Delete(etcd.Ctx, "/container/"+containername+"/spec", clientv3.WithPrefix())
+	etcd.Kv.Delete(etcd.Ctx, "/spec/"+specname, clientv3.WithPrefix())
 	return nil
 }
 

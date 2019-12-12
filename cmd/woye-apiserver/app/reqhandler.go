@@ -106,13 +106,13 @@ func lxc_delete(w http.ResponseWriter, r *http.Request) {
 	bufbody := new(bytes.Buffer)
 	bufbody.ReadFrom(r.Body)
 
-	err := json.Unmarshal(bufbody.Bytes(), &ddata)
+	err := yaml.Unmarshal(bufbody.Bytes(), &spec)
 	if err != nil {
 		fmt.Println(err)
 		resptxt = err.Error()
 	}
 
-	err = DeleteContainerSpec(ddata.Name)
+	err = DeleteContainerSpec(spec.Name)
 	if err != nil {
 		fmt.Println(err)
 		resptxt = err.Error()
