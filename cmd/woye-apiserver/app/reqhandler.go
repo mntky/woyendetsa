@@ -78,18 +78,18 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 }
 
 
-//get container spec
+//refer container spec
 func lxc_get(w http.ResponseWriter, r *http.Request) {
 	bufbody := new(bytes.Buffer)
 	bufbody.ReadFrom(r.Body)
 
-	err := json.Unmarshal(bufbody.Bytes(), &ddata)
+	err := json.Unmarshal(bufbody.Bytes(), &spec)
 	if err != nil {
 		fmt.Println(err)
 		resptxt = err.Error()
 	}
 
-	resptxt, err := ReferContainerSpec(ddata.Name)
+	resptxt, err := ReferContainerSpec(spec.Name)
 	if err != nil {
 		fmt.Println(err)
 		resptxt = err.Error()

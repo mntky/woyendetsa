@@ -4,6 +4,7 @@ import (
 	//"os"
 	"fmt"
 	"time"
+	"errors"
 	"encoding/json"
 	"context"
 
@@ -70,15 +71,21 @@ func PutContainerSpec(specname string, spec Specmeta) error {
 
 
 //get container spec
-func ReferContainerSpec(containername string) (string, error) {
+func ReferContainerSpec(specname string) (string, error) {
 	etcd, err := newEtcdClient()
 	if err != nil {
 		return "", err
 	}
 	defer etcd.Cli.Close()
-	getresp, err := etcd.Kv.Get(etcd.Ctx, "/spec/"+containername)
+
+	fmt.Println(specname)
+
+	getresp, err := etcd.Kv.Get(etcd.Ctx, "/spec/"+specname)
 	if err != nil {
 		return "", err
+	}
+	if len(getresp.Kvs) <= 0 {
+		return "", errors.New("can`t get Value")
 	}
 
 	fmt.Println(string(getresp.Kvs[0].Value))
