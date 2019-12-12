@@ -45,13 +45,13 @@ func newEtcdClient() (EtcdElement, error) {
 }
 
 
-func PutContainerSpec(containername, reqvalue string) error {
+func PutContainerSpec(specname, spec string) error {
 	etcd, err := newEtcdClient()
 	if err != nil {
 		return err
 	}
 	defer etcd.Cli.Close()
-	putresp, err := etcd.Kv.Put(etcd.Ctx, "/container/"+containername+"/spec", reqvalue)
+	putresp, err := etcd.Kv.Put(etcd.Ctx, "/spec/"+specname, spec)
 	etcd.Cancel()
 	if err != nil {
 		return err

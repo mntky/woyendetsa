@@ -18,6 +18,7 @@ require (
 	go.uber.org/zap v1.13.0 // indirect
 	golang.org/x/net v0.0.0-20191126235420-ef20fe5d7933 // indirect
 	google.golang.org/grpc v1.25.1
+	gopkg.in/yaml.v2 v2.2.2
 )
 
 replace github.com/coreos/go-systemd => /root/go/src/github.com/coreos/go-systemd

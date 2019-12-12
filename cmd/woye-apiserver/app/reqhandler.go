@@ -4,19 +4,37 @@ import (
 	"fmt"
 	"bytes"
 	//"io/ioutil"
+	yaml "gopkg.in/yaml.v2"
 	"encoding/json"
 	"net/http"
 	//"github.com/lxc/lxd/shared/api"
 )
 
-type createdata struct {
-	Name		string
-	Replica int
-	Test		string
+var (
+	resptxt = "ok"
+	spec specstruct
+
+	//test
+	ddata specstruct
+)
+type specstruct struct {
+	Name	string `yaml:"name"`
+	Spec	Specmeta `yaml:"spec"`
 }
-type deletedata struct {
-	Name	string
+type Specmeta struct {
+	Container containerstruct `yaml:"container"`
+	Test	test	`yaml:"test"`
 }
+type containerstruct struct {
+	Name		string `yaml:"name"`
+	Distri	string `yaml:"distri"`
+	Release	string `yaml:"release"`
+	Arch		string `yaml:"arch"`
+}
+type test struct {
+	Name	string `yaml:"name"`
+}
+
 
 func startServer(url string) {
 	http.HandleFunc("/api/lxc/create", lxc_create)
@@ -28,11 +46,6 @@ func startServer(url string) {
 	fmt.Println(err)
 }
 
-var (
-	resptxt = []byte("ok")
-	cdata createdata
-	ddata deletedata
-)
 
 //woctl create command.
 //register containername:spec to etcd
@@ -42,19 +55,26 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("--create--")
 	//送られてきたjsonのspecを構造体にはめる
-	err := json.Unmarshal(bufbody.Bytes(), &cdata)
+	err := yaml.Unmarshal(bufbody.Bytes(), &spec)
 	if err != nil {
 		fmt.Println(err)
+		resptxt = err.Error()
 	}
+
+	fmt.Println("--Print SPEC--")
+	fmt.Println(spec)
+	fmt.Println(spec.Spec)
+	fmt.Println(spec.Spec.Container)
+	fmt.Println(spec.Spec.Container.Name)
+	fmt.Println(spec.Spec.Container.Distri)
 
 	fmt.Println("--etcd put--")
-	//cdata.Nameはコンテナ名、bodyは送られてきたjson
-	err = PutContainerSpec(cdata.Name, bufbody.String() )
+	err = PutContainerSpec(spec.Name, spec.Spec)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	w.Write(resptxt)
+	w.Write([]byte(resptxt))
 }
 
 
@@ -66,14 +86,16 @@ func lxc_get(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(bufbody.Bytes(), &ddata)
 	if err != nil {
 		fmt.Println(err)
+		resptxt = err.Error()
 	}
 
-	resp, err := ReferContainerSpec(ddata.Name)
+	resptxt, err := ReferContainerSpec(ddata.Name)
 	if err != nil {
 		fmt.Println(err)
+		resptxt = err.Error()
 	}
 
-	w.Write([]byte(resp))
+	w.Write([]byte(resptxt))
 }
 
 func lxc_update(w http.ResponseWriter, r *http.Request) {
@@ -87,11 +109,13 @@ func lxc_delete(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(bufbody.Bytes(), &ddata)
 	if err != nil {
 		fmt.Println(err)
+		resptxt = err.Error()
 	}
 
 	err = DeleteContainerSpec(ddata.Name)
 	if err != nil {
 		fmt.Println(err)
+		resptxt = err.Error()
 	}
-	w.Write(resptxt)
+	w.Write([]byte(resptxt))
 }
