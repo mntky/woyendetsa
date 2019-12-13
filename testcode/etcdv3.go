@@ -20,7 +20,7 @@ func main() {
 	}
 	defer cli.Close()
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	resp, err := cli.Get(ctx, "/pod")
+	resp, err := cli.Get(ctx, "mrkspec")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
