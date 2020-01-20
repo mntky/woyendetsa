@@ -61,17 +61,19 @@ func lxc_create(w http.ResponseWriter, r *http.Request) {
 		resptxt = err.Error()
 	}
 
-	fmt.Println("--Print SPEC--")
-	fmt.Println(spec)
-	fmt.Println(spec.Spec)
-	fmt.Println(spec.Spec.Container)
-	fmt.Println(spec.Spec.Container.Name)
-	fmt.Println(spec.Spec.Container.Distri)
+	//fmt.Println("--Print SPEC--")
+	//fmt.Println(spec)
+	//fmt.Println(spec.Spec)
+	//fmt.Println(spec.Spec.Container)
+	//fmt.Println(spec.Spec.Container.Name)
+	//fmt.Println(spec.Spec.Container.Distri)
 
 	fmt.Println("--etcd put--")
 	err = PutContainerSpec(spec.Name, spec.Spec)
 	if err != nil {
 		fmt.Println(err)
+	}else {
+		//ここにnotifer
 	}
 
 	w.Write([]byte(resptxt))
