@@ -78,14 +78,8 @@ func ReferContainerSpec(specname string) (string, error) {
 	}
 	defer etcd.Cli.Close()
 
-//////////////////////////////////
-
 	fmt.Println(specname)
-	if specname == "" {
-		getresp, err := etcd.Kv.Get(etcd.Ctx, specname)
-	} else {
-		getresp, err := etcd.Kv.Get(etcd.Ctx, "/spec/"+specname)
-	}
+	getresp, err := etcd.Kv.Get(etcd.Ctx, specname)
 	if err != nil {
 		return "", err
 	}
