@@ -78,7 +78,7 @@ func ReferContainerSpec(specname string) (string, error) {
 	}
 	defer etcd.Cli.Close()
 
-	fmt.Println(specname)
+	//fmt.Println(specname)
 	getresp, err := etcd.Kv.Get(etcd.Ctx, specname)
 	if err != nil {
 		return "", err
@@ -87,7 +87,7 @@ func ReferContainerSpec(specname string) (string, error) {
 		return "", errors.New("can`t get Value")
 	}
 
-	fmt.Println(string(getresp.Kvs[0].Value))
+	//fmt.Println(string(getresp.Kvs[0].Value))
 	return string(getresp.Kvs[0].Value), nil
 }
 
@@ -114,4 +114,45 @@ func deleteAllKeys() error {
 
 	etcd.Kv.Delete(etcd.Ctx, "", clientv3.WithPrefix())
 	return nil
+}
+
+func PutNodeMeta(meta NodeMetadata) error {
+	etcd, err := newEtcdClient()
+	if err != nil {
+		return err
+	}
+	defer etcd.Cli.Close()
+
+	//metadatajson, err := json.Marshal(meta)
+	//if err != nil {
+	//	return err
+	//}
+
+	putresp, err := etcd.Kv.Put(etcd.Ctx, "/node/"+string(meta.Name), string(meta.Addr))
+	etcd.Cancel()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(putresp.Header.Revision)
+	return nil
+}
+
+func GetKey(word string) ([]string, error) {
+	etcd, err := newEtcdClient()
+	if err != nil {
+		return nil, err
+	}
+	defer etcd.Cli.Close()
+
+	getresp, err := etcd.Kv.Get(etcd.Ctx, word, clientv3.WithPrefix())
+
+	var keys []string
+	for i:=0; i<len(getresp.Kvs); i++ {
+		keys = append(keys, string(getresp.Kvs[i].Key))
+		//fmt.Println(string(getresp.Kvs[i].Key))
+	}
+
+	return keys, nil
+
 }
