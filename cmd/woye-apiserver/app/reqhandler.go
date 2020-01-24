@@ -144,12 +144,17 @@ func node_add(w http.ResponseWriter, r *http.Request) {
 }
 
 func refer_spec(w http.ResponseWriter, r *http.Request) {
-	bufbody := new(bytes.Buffer)
-	bufbody.ReadFrom(r.Body)
+	fmt.Println("api/refer debug")
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(r.Body)
+	fmt.Println(buf.String())
 
-	fmt.Println(r.Body)
-
-	w.Write([]byte("ok refer"))
+	spec, err := ReferContainerSpec(buf.String())
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(spec)
+	w.Write([]byte(spec))
 }
 
 //func node_delete(w http.ResponseWriter, r *http.Request) {
