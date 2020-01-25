@@ -28,7 +28,7 @@ type Specmeta struct {
 }
 type containerstruct struct {
 	Name		string `yaml:"name"`
-	Distri	string `yaml:"distri"`
+	Distro	string `yaml:"distro"`
 	Release	string `yaml:"release"`
 	Arch		string `yaml:"arch"`
 }
